@@ -18,29 +18,39 @@ class MailerService {
     });
   }
   async sendVerificationEmail(email, token) {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Verify your email",
-      text: `
-      Please verify your email by clicking on the following link:
-      ${process.env.CLIENT_URL}/verify-account/${token}
-      `,
-    };
-    await this.transporter.sendMail(mailOptions);
+    try {
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Verify your email",
+        text: `
+        Please verify your email by clicking on the following link:
+        ${process.env.CLIENT_URL}/verify-account/${token}
+        `,
+      };
+      await this.transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
   }
 
   async sendPasswordResetEmail(email, token) {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Reset your password",
-      text: `
-      Please reset your password by clicking on the following link:
-      ${process.env.CLIENT_URL}/reset-password/${token}
-      `,
-    };
-    await this.transporter.sendMail(mailOptions);
+    try {
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Reset your password",
+        text: `
+        Please reset your password by clicking on the following link:
+        ${process.env.CLIENT_URL}/reset-password/${token}
+        `,
+      };
+      await this.transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
   }
 }
 
