@@ -1,10 +1,10 @@
-const BcryptPasswordService = require("./bcryptPasswordService");
+const BcryptPasswordService = require("./BcryptPasswordService");
 const { User, Page, Content } = require("../models");
-const AuthService = require("./authService");
-const UsersService = require("./usersService");
-const PagesService = require("./pagesService");
-const ContentService = require("./contentService");
-const MailerService = require("./mailerService");
+const AuthService = require("./AuthService");
+const UsersService = require("./UsersService");
+const PagesService = require("./PagesService");
+const ContentService = require("./ContentService");
+const MailerService = require("./MailerService");
 
 const passwordService = new BcryptPasswordService();
 const authService = new AuthService(User, passwordService);
