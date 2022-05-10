@@ -1,21 +1,47 @@
 const { body } = require("express-validator");
 const validationErrors = require("./validationErrors");
+const { User } = require("../../models");
 
 module.exports = [
   body("username")
     .isLength({ max: 32 })
-    .withMessage("Username must be less than 32 characters")
-    .custom((value) => {
-      if (/^[a-z_\d]+$/.test(value)) return true;
-      throw new Error("Username must be lowercase alphanumeric");
+    .withMessage("El nombre de usuario debe tener un máximo de 32 caracteres.")
+    .custom(async (value) => {
+      if (!/^[a-z_\d]+$/.test(value))
+        throw new Error(
+          "El nombre de usuario solo puede contener letras, números y guiones bajos."
+        );
+
+      const user = await User.findOne({
+        where: {
+          username: value,
+        },
+      });
+
+      if (user) throw new Error("El nombre de usuario ya existe.");
+
+      return true;
     }),
-  body("email").isEmail().withMessage("Email is invalid"),
+  body("email")
+    .isEmail()
+    .withMessage("El email no es válido.")
+    .custom(async (value) => {
+      const user = await User.findOne({
+        where: {
+          email: value,
+        },
+      });
+
+      if (user) throw new Error("El email ya existe.");
+
+      return true;
+    }),
   body("password")
     .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters long"),
+    .withMessage("La contraseña debe tener un mínimo de 6 caracteres."),
   body("passwordConfirmation").custom((value, { req }) => {
     if (value !== req.body.password) {
-      throw new Error("Passwords do not match");
+      throw new Error("Las contraseñas no coinciden.");
     }
     return true;
   }),

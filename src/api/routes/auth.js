@@ -12,7 +12,7 @@ const verifyToken = require("../middlewares/verifyToken");
 
 module.exports = function auth(app) {
   app.use("/auth", router);
-  router.post("/signup", validateUser, async (req, res) => {
+  router.post("/signup", validateUser, async (req, res, next) => {
     try {
       const user = await authService.signUp(
         req.body.username,
@@ -30,9 +30,9 @@ module.exports = function auth(app) {
       await mailerService.sendVerificationEmail(user.email, token);
 
       res.sendStatus(200);
-    } catch (e) {
-      console.log(e);
-      res.sendStatus(403);
+    } catch (error) {
+      console.error(error);
+      res.status(403).json({ error: error.message });
     }
   });
 

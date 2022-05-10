@@ -16,6 +16,6 @@ app.use(express.urlencoded({ extended: false }));
 routes(app);
 
 app.listen(port, () => {
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port " + port);
   //sequelize.sync({ force: true });
 });
