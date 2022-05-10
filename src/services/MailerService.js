@@ -4,7 +4,13 @@ const nodemailer = require("nodemailer");
 class MailerService {
   constructor() {
     this.transporter = nodemailer.createTransport({
-      service: "hotmail",
+      service: "Outlook365",
+      host: "smtp.office365.com",
+      port: "587",
+      tls: {
+        ciphers: "SSLv3",
+        rejectUnauthorized: false,
+      },
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
