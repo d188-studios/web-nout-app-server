@@ -32,7 +32,11 @@ module.exports = function auth(app) {
       res.sendStatus(200);
     } catch (error) {
       console.error(error);
-      res.status(403).json({ error });
+      res.status(403).json({
+        error: {
+          message: error.message,
+        },
+      });
     }
   });
 
