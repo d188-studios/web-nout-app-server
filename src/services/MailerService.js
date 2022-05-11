@@ -17,14 +17,15 @@ class MailerService {
       },
     });
   }
-  async sendVerificationEmail(email, token) {
+  async sendVerificationEmail(email, token, username) {
     try {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
         subject: "Verify your email",
         text: `
-        Please verify your email by clicking on the following link:
+        Nombre de usuario: ${username}
+        Verifica tu cuenta haciendo click en el siguiente link:
         ${process.env.CLIENT_URL}/verify-account/${token}
         `,
       };
@@ -35,14 +36,15 @@ class MailerService {
     }
   }
 
-  async sendPasswordResetEmail(email, token) {
+  async sendPasswordResetEmail(email, token, username) {
     try {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
         subject: "Reset your password",
         text: `
-        Please reset your password by clicking on the following link:
+        Nombre de usuario: ${username}
+        Da click en el siguiente link para resetear tu contraseña:
         ${process.env.CLIENT_URL}/reset-password/${token}
         `,
       };

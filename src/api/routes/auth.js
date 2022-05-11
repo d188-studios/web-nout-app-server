@@ -27,7 +27,11 @@ module.exports = function auth(app) {
         process.env.JWT_VERIFICATION_SECRET,
         { expiresIn: "1h" }
       );
-      await mailerService.sendVerificationEmail(user.email, token);
+      await mailerService.sendVerificationEmail(
+        user.email,
+        token,
+        user.username
+      );
 
       res.sendStatus(200);
     } catch (error) {
@@ -89,7 +93,11 @@ module.exports = function auth(app) {
         process.env.JWT_RESET_PASSWORD_SECRET,
         { expiresIn: "1h" }
       );
-      await mailerService.sendPasswordResetEmail(user.email, token);
+      await mailerService.sendPasswordResetEmail(
+        user.email,
+        token,
+        user.username
+      );
       res.sendStatus(200);
     } catch (e) {
       console.log(e);

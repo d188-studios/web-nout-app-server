@@ -16,7 +16,7 @@ class AuthService {
 
     const hash = await this.passwordService.hashPassword(password);
     const newUser = await this.usersModel.create({
-      username,
+      username: username,
       email,
       password: hash,
     });
