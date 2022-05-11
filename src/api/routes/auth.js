@@ -130,7 +130,7 @@ module.exports = function auth(app) {
 
   router.post("/send-verify-account-email", verifyToken, async (req, res) => {
     try {
-      const user = await usersService.getUserById(req.user.uuid);
+      const user = await usersService.getUserByUuid(req.user.uuid);
       const token = jwt.sign(
         {
           uuid: user.uuid,
