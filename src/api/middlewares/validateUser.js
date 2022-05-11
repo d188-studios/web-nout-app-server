@@ -7,7 +7,7 @@ module.exports = [
     .isLength({ max: 32 })
     .withMessage("El nombre de usuario debe tener un máximo de 32 caracteres.")
     .custom(async (value) => {
-      if (!/^[a-z_\d]+$/.test(value))
+      if (!/^[a-zA-Z_\d]+$/.test(value))
         throw new Error(
           "El nombre de usuario solo puede contener letras, números y guiones bajos."
         );
