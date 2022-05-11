@@ -127,4 +127,30 @@ module.exports = function auth(app) {
       );
     }
   );
+
+  router.post("/send-verify-account-email", async (req, res) => {
+    try {
+      const user = await authService.getUserByEmail(req.body.email);
+      const token = jwt.sign(
+        {
+          uuid: user.uuid,
+        },
+        process.env.JWT_VERIFICATION_SECRET,
+        { expiresIn: "1h" }
+      );
+      await mailerService.sendVerificationEmail(
+        user.email,
+        token,
+        user.username
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.error(error);
+      res.status(403).json({
+        error: {
+          message: error.message,
+        },
+      });
+    }
+  });
 };
