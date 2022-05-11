@@ -5,10 +5,10 @@ const {
   validateUser,
   validateSignIn,
   validatePasswordReset,
+  verifyToken,
 } = require("../middlewares");
 const { authService, mailerService, usersService } = require("../../services");
 const router = express.Router();
-const verifyToken = require("../middlewares/verifyToken");
 
 module.exports = function auth(app) {
   app.use("/auth", router);
@@ -128,9 +128,9 @@ module.exports = function auth(app) {
     }
   );
 
-  router.post("/send-verify-account-email", async (req, res) => {
+  router.post("/send-verify-account-email", verifyToken, async (req, res) => {
     try {
-      const user = await authService.getUserByEmail(req.body.email);
+      const user = await usersService.getUserById(req.user.uuid);
       const token = jwt.sign(
         {
           uuid: user.uuid,
