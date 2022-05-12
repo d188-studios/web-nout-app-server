@@ -15,7 +15,7 @@ module.exports = function auth(app) {
   router.post("/signup", validateUser, async (req, res, next) => {
     try {
       const user = await authService.signUp(
-        req.body.username,
+        req.body.username.toLowerCase(),
         req.body.email,
         req.body.password
       );
@@ -30,7 +30,7 @@ module.exports = function auth(app) {
       await mailerService.sendVerificationEmail(
         user.email,
         token,
-        user.username
+        user.username.toLowerCase()
       );
 
       res.sendStatus(200);
@@ -47,7 +47,7 @@ module.exports = function auth(app) {
   router.post("/signin", validateSignIn, async (req, res) => {
     try {
       const user = await authService.signIn(
-        req.body.username,
+        req.body.username.toLowerCase(),
         req.body.password
       );
 
@@ -96,7 +96,7 @@ module.exports = function auth(app) {
       await mailerService.sendPasswordResetEmail(
         user.email,
         token,
-        user.username
+        user.username.toLowerCase()
       );
       res.sendStatus(200);
     } catch (e) {
@@ -141,7 +141,7 @@ module.exports = function auth(app) {
       await mailerService.sendVerificationEmail(
         user.email,
         token,
-        user.username
+        user.username.toLowerCase()
       );
       res.sendStatus(200);
     } catch (error) {

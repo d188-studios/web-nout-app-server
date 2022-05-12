@@ -5,15 +5,6 @@ class AuthService {
   }
 
   async signUp(username, email, password) {
-    /*     const user = await this.usersModel.findOne({
-      where: {
-        $or: [{ email }, { username }],
-      },
-    });
-    if (user) {
-      throw new Error("El usuario ya existe.");
-    } */
-
     const hash = await this.passwordService.hashPassword(password);
     const newUser = await this.usersModel.create({
       username: username,
