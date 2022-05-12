@@ -17,5 +17,5 @@ routes(app);
 
 app.listen(port, () => {
   console.log("Server is running on port " + port);
-  sequelize.sync({ force: true });
+  //sequelize.sync({ force: true });
 });
