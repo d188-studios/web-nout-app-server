@@ -13,17 +13,11 @@
     }
   },
   "test": {
-    "username": "zhnsxtjzzeakiu",
-    "password": "716759a09a5bdb36686048390ced554d8f4887af33dc04263c067dc005dc9a11",
-    "database": "dc8gapg5ua1o8n",
-    "host": "ec2-3-209-124-113.compute-1.amazonaws.com",
-    "dialect": "postgres",
-    "dialectOptions": {
-      "ssl": {
-        "require": true,
-        "rejectUnauthorized": false
-      }
-    }
+    "username": "emma_lauper",
+    "password": "",
+    "database": "web-nout-prod",
+    "host": "localhost",
+    "dialect": "postgres"
   },
   "production": {
     "username": "zhnsxtjzzeakiu",
