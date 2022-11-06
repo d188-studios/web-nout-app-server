@@ -1,41 +1,38 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Verificacion extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Page, Encuesta, Verificacion }) {
+    static associate({ User }) {
       // define association here
-      this.hasMany(Page, { foreignKey: "owner" });
-      this.hasOne(Encuesta, { foreignKey: "encuestado" });
-      this.hasOne(Verificacion, { foreignKey: "usuario" });
+
+      this.belongsTo(User, { foreignKey: "usuario" });
     }
   }
-  User.init(
+  Verificacion.init(
     {
-      uuid: {
+      id_encuesta: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
+      usuario: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
-      authorized: {
+      fecha_enviado: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      fecha_verificacion: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      verificado: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -43,10 +40,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      tableName: "users",
-      modelName: "User",
+      modelName: "Verificacion",
+      tableName: "verificaciones",
       timestamps: false,
     }
   );
-  return User;
+  return Verificacion;
 };
