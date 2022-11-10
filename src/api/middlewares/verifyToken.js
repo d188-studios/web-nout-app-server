@@ -15,7 +15,9 @@ module.exports = function verifyToken(req, res, next) {
 
     usersService
       .getUserByUuid(user.uuid)
-      .then((user) => {
+      .then(async (user) => {
+        const verifiedValue = await usersService.getVerifiedValue(user.uuid);
+        user.authorized = verifiedValue.verificado;
         req.user = user;
         next();
       })

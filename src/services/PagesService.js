@@ -1,3 +1,5 @@
+const formatTree = require("../utils/formatTree");
+
 class PagesService {
   constructor(pagesModel, contentModel) {
     this.pagesModel = pagesModel;
@@ -11,7 +13,7 @@ class PagesService {
       },
     });
 
-    return this.tree(pages.map((page) => page.dataValues));
+    return formatTree(pages.map((page) => page.dataValues));
   }
 
   async createPage(owner, title, parent) {
@@ -97,35 +99,6 @@ class PagesService {
     });
 
     return newPage.dataValues;
-  }
-
-  tree(pages) {
-    const tree = [];
-
-    pages.forEach((page) => {
-      const { id, title, expanded, parent } = page;
-      if (page.parent === null) {
-        tree.push({ id, title, expanded, parent, children: [] });
-      }
-    });
-
-    const addChildren = (parent) => {
-      pages.forEach((page) => {
-        if (page.parent === parent.id) {
-          parent.children.push({
-            id: page.id,
-            title: page.title,
-            expanded: page.expanded,
-            parent: page.parent,
-            children: [],
-          });
-          addChildren(parent.children[parent.children.length - 1]);
-        }
-      });
-    };
-
-    tree.forEach((parent) => addChildren(parent));
-    return tree;
   }
 }
 

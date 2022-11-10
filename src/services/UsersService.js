@@ -1,6 +1,7 @@
 class UsersService {
-  constructor(userModel, passwordService) {
+  constructor(userModel, passwordService, verificationModel) {
     this.usersModel = userModel;
+    this.verificationModel = verificationModel;
     this.passwordService = passwordService;
   }
 
@@ -19,9 +20,9 @@ class UsersService {
   }
 
   async auhorizeUser(uuid) {
-    const user = await this.usersModel.findOne({
+    const user = await this.verificationModel.findOne({
       where: {
-        uuid,
+        usuario: uuid,
       },
     });
 
@@ -29,12 +30,17 @@ class UsersService {
       throw new Error("User not found");
     }
 
-    if (user.authorized) {
+    if (user.verificado) {
       throw new Error("User already authorized");
     }
 
+    const now = new Date();
+
     await user.update({
-      authorized: true,
+      verificado: true,
+    });
+    await user.update({
+      fecha_verificacion: now.toISOString().split("T")[0],
     });
   }
 
@@ -53,6 +59,20 @@ class UsersService {
     await user.update({
       password: hash,
     });
+  }
+
+  async getVerifiedValue(uuid) {
+    const user = await this.verificationModel.findOne({
+      where: {
+        usuario: uuid,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user.dataValues;
   }
 }
 

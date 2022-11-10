@@ -52,6 +52,11 @@ module.exports = function auth(app) {
       );
 
       const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET);
+
+      const verifiedValue = await usersService.getVerifiedValue(user.uuid);
+
+      user.authorized = verifiedValue.verificado;
+
       delete user.password;
       res.json({ token, user });
     } catch (e) {

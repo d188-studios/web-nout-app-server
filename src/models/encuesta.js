@@ -36,7 +36,6 @@ module.exports = (sequelize, DataTypes) => {
       facultad: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: false,
       },
       contestada: {
         type: DataTypes.BOOLEAN,
