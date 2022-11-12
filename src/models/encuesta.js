@@ -24,16 +24,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      puntuacion: {
+      calificacion_diseño_visual: {
         type: DataTypes.REAL,
         allowNull: true,
-        unique: true,
       },
-      municipio: {
-        type: DataTypes.STRING,
+      calificacion_experiencia_usuario: {
+        type: DataTypes.REAL,
         allowNull: true,
       },
-      facultad: {
+      calificacion_utilidad_aplicacion: {
+        type: DataTypes.REAL,
+        allowNull: true,
+      },
+      profesion: {
         type: DataTypes.STRING,
         allowNull: true,
       },

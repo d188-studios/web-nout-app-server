@@ -7,11 +7,12 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Page, Encuesta, Verificacion }) {
+    static associate({ Page, Encuesta, Verificacion, movimientosDeUsuario }) {
       // define association here
       this.hasMany(Page, { foreignKey: "owner" });
       this.hasOne(Encuesta, { foreignKey: "encuestado" });
       this.hasOne(Verificacion, { foreignKey: "usuario" });
+      this.hasMany(movimientosDeUsuario, { foreignKey: "id_usuario" });
     }
   }
   User.init(
@@ -26,6 +27,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+
+      nombre: {
+        type: DataTypes.STRING,
+        //allowNull: false,
+      },
+
+      apellido: {
+        type: DataTypes.STRING,
+        //allowNull: false,
+      },
+
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -34,6 +46,17 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      administrador: {
+        type: DataTypes.STRING,
+        //allowNull: false,
+        defaultValue: false,
+      },
+
+      baneado: {
+        type: DataTypes.STRING,
+        //allowNull: false,
+        defaultValue: false,
       },
     },
     {

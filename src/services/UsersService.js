@@ -1,8 +1,9 @@
 class UsersService {
-  constructor(userModel, passwordService, verificationModel) {
+  constructor(userModel, passwordService, verificationModel, encuestaModel) {
     this.usersModel = userModel;
     this.verificationModel = verificationModel;
     this.passwordService = passwordService;
+    this.encuestaModel = encuestaModel;
   }
 
   async getUserByUuid(uuid) {
@@ -69,10 +70,24 @@ class UsersService {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("User not found in 'verificaciones' relation");
     }
 
     return user.dataValues;
+  }
+
+  async getEncuestaValue(uuid) {
+    const encuesta = await this.encuestaModel.findOne({
+      where: {
+        encuestado: uuid,
+      },
+    });
+
+    if (!encuesta) {
+      throw new Error("User not found in 'encuestas' relation");
+    }
+
+    return encuesta.dataValues;
   }
 }
 

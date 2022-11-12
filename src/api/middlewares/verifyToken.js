@@ -17,6 +17,8 @@ module.exports = function verifyToken(req, res, next) {
       .getUserByUuid(user.uuid)
       .then(async (user) => {
         const verifiedValue = await usersService.getVerifiedValue(user.uuid);
+        const encuestaValue = await usersService.getEncuestaValue(user.uuid);
+        user.survey = encuestaValue.contestada;
         user.authorized = verifiedValue.verificado;
         req.user = user;
         next();
