@@ -35,13 +35,8 @@ class UsersService {
       throw new Error("User already authorized");
     }
 
-    const now = new Date();
-
     await user.update({
       verificado: true,
-    });
-    await user.update({
-      fecha_verificacion: now.toISOString().split("T")[0],
     });
   }
 

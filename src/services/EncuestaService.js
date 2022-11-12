@@ -32,15 +32,18 @@ class EncuestaService {
       throw new Error("Survey not found");
     }
 
-    console.log(
-      `vs: ${visualScore}\nux: ${UXscore}\nut: ${utilityScore}\nprofesion: ${profesion}`
-    );
+    await encuesta.update({
+      calificacion_diseño_visual: visualScore,
+      calificacion_experiencia_usuario: UXscore,
+      calificacion_utilidad_aplicacion: utilityScore,
+      profesion,
+      contestada: true,
+    });
 
-    /* await encuesta.update({
-      
-    }); */
-
-    return encuesta.dataValues;
+    const updatedEncuesta = await this.encuestasModel.findOne({
+      where: { encuestado },
+    });
+    return updatedEncuesta.dataValues;
   }
 }
 

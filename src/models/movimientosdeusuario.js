@@ -24,15 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       movimiento: {
         type: DataTypes.STRING,
       },
       fecha_de_movimiento: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
       },
     },
     {

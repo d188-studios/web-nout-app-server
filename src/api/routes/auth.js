@@ -51,6 +51,8 @@ module.exports = function auth(app) {
         req.body.password
       );
 
+      if (user.baneado) return res.sendStatus(401);
+
       const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET);
 
       const verifiedValue = await usersService.getVerifiedValue(user.uuid);

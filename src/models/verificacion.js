@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Verificacion.init(
     {
-      id_encuesta: {
+      id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
@@ -25,11 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       fecha_enviado: {
-        type: DataTypes.DATEONLY,
-        allowNull: true,
-      },
-      fecha_verificacion: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
         allowNull: true,
       },
       verificado: {

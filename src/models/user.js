@@ -48,14 +48,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       administrador: {
-        type: DataTypes.STRING,
-        //allowNull: false,
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: false,
       },
 
       baneado: {
-        type: DataTypes.STRING,
-        //allowNull: false,
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: false,
       },
     },

@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const { verifyToken, validateSurvey } = require("../middlewares/");
 const { encuestaService } = require("../../services");
+const { Encuesta } = require("../../models");
 const db = require("../../models/index");
 
 const router = express.Router();
@@ -15,7 +16,16 @@ module.exports = function survey(app) {
 
   router.post("/", verifyToken, validateSurvey, async (req, res) => {
     try {
-      const survey = await encuestaService.submitSurvey(
+      const survey = await Encuesta.findOne({
+        where: {
+          encuestado: req.user.uuid,
+        },
+      });
+
+      if (survey.dataValues.contestada)
+        throw new Error("The survey had alredy been submited");
+
+      const updatedSurvey = await encuestaService.submitSurvey(
         req.user.uuid,
         req.body.visualScore,
         req.body.UXscore,
@@ -23,7 +33,7 @@ module.exports = function survey(app) {
         req.body.profesion
       );
 
-      res.json(survey);
+      res.json(updatedSurvey);
     } catch (e) {
       console.log(e);
       res.sendStatus(403);

@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Encuesta.init(
     {
-      id_encuesta: {
+      id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
@@ -39,6 +39,12 @@ module.exports = (sequelize, DataTypes) => {
       profesion: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      promedio_calificacion: {
+        type: DataTypes.REAL,
+      },
+      resultado_calificacion: {
+        type: DataTypes.STRING,
       },
       contestada: {
         type: DataTypes.BOOLEAN,
