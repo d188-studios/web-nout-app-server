@@ -4,4 +4,6 @@ module.exports = {
   randomLastName: require("./randomLastName"),
   probabilityOf: require("./probabilityOf"),
   randomPageNumber: require("./randomPageNumber"),
+  randomScore: require("./randomScore"),
+  randomProfesion: require("./randomProfesion"),
 };

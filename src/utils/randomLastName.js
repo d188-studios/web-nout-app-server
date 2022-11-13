@@ -208,8 +208,4 @@ function randomLastName() {
   return randomLastName;
 }
 
-for (let i = 0; i < 10; i++) {
-  console.log(randomLastName());
-}
-
 module.exports = randomLastName;

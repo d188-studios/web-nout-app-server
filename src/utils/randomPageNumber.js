@@ -1,11 +1,10 @@
 function randomPageNumber() {
-  const randomPage = Math.floor(Math.random() * 40);
+  const max = 40;
+  const min = 5;
 
-  if (randomPage <= 5) randomPageNumber();
+  const randomPage = Math.floor(Math.random() * (max - min + 1) + min);
+
   return randomPage;
 }
 
-for (let i = 0; i <= randomPageNumber(); i++) {
-  console.log(i);
-}
 module.exports = randomPageNumber;
