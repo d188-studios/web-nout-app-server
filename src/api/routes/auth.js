@@ -17,6 +17,8 @@ module.exports = function auth(app) {
       const user = await authService.signUp(
         req.body.username.toLowerCase(),
         req.body.email,
+        req.body.nombre.toLowerCase(),
+        req.body.apellido.toLowerCase(),
         req.body.password
       );
 
@@ -80,7 +82,7 @@ module.exports = function auth(app) {
       (err, user) => {
         if (err) return res.sendStatus(403);
         usersService
-          .auhorizeUser(user.uuid)
+          .authorizeUser(user.uuid)
           .then(() => {
             res.sendStatus(200);
           })

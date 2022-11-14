@@ -1,4 +1,4 @@
-const formatTree = require("../utils/formatTree");
+const { formatTree } = require("../utils/");
 
 class PagesService {
   constructor(pagesModel, contentModel) {

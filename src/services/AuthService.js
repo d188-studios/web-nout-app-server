@@ -4,11 +4,13 @@ class AuthService {
     this.passwordService = passwordService;
   }
 
-  async signUp(username, email, password) {
+  async signUp(username, email, nombre, apellido, password) {
     const hash = await this.passwordService.hashPassword(password);
     const newUser = await this.usersModel.create({
-      username: username,
+      username,
       email,
+      nombre,
+      apellido,
       password: hash,
     });
     return newUser.dataValues;

@@ -22,9 +22,9 @@ module.exports = function survey(app) {
         },
       });
 
-      if (survey.dataValues.contestada)
+      /* if (survey.dataValues.contestada)
         throw new Error("The survey had alredy been submited");
-
+ */
       const updatedSurvey = await encuestaService.submitSurvey(
         req.user.uuid,
         req.body.visualScore,

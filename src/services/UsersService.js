@@ -20,7 +20,7 @@ class UsersService {
     return user.dataValues;
   }
 
-  async auhorizeUser(uuid) {
+  async authorizeUser(uuid) {
     const user = await this.verificationModel.findOne({
       where: {
         usuario: uuid,
