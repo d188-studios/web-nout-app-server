@@ -1,5 +1,12 @@
 const BcryptPasswordService = require("./BcryptPasswordService");
-const { User, Page, Content, Verificacion, Encuesta } = require("../models");
+const {
+  User,
+  Page,
+  Content,
+  Verificacion,
+  Encuesta,
+  movimientosDePagina,
+} = require("../models");
 const AuthService = require("./AuthService");
 const UsersService = require("./UsersService");
 const PagesService = require("./PagesService");

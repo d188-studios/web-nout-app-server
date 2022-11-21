@@ -5,4 +5,5 @@ module.exports = {
   validateContent: require("./validateContent"),
   validatePasswordReset: require("./validatePasswordReset"),
   validateSurvey: require("./validateSurvey"),
+  verifyAdmin: require("./verifyAdmin"),
 };

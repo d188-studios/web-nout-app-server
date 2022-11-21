@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const verifyToken = require("../middlewares/verifyToken");
+const { verifyAdmin, verifyToken } = require("../middlewares");
 const db = require("../../models/index");
 const {
   authService,
@@ -16,47 +16,62 @@ const {
   randomProfesion,
   randomPageNumber,
   randomScore,
+  formatArray,
+  formatArrString,
 } = require("../../utils");
 
 const router = express.Router();
 
 module.exports = function admin(app) {
-  app.use("/admin", router);
-  router.post("/users", verifyToken, async (req, res) => {
-    const limit = req.body.limit ?? 10;
-    const page = req.body.page ?? 1;
-    const baneado = req.body.baneado;
+  app.use("/admin", verifyToken, verifyAdmin, router);
+  router.post("/users", async (req, res) => {
+    try {
+      const limit = req.body.limit ?? 10;
+      const page = req.body.page ?? 1;
+      const baneado = req.body.baneado;
+      const verificado = req.body.verificado;
+      const contestada = req.body.contestada;
 
-    const usernames =
-      req.body.usernames instanceof Array ? req.body.usernames : [];
+      const usernames =
+        req.body.usernames instanceof Array ? req.body.usernames : [];
 
-    const users = await db.sequelize.query(
-      `select * from fu2(${
-        usernames.length ? "'" + JSON.stringify(usernames) + "'" : "null"
-      },
-      null,
-      ${baneado !== undefined ? baneado : null}
+      const email = req.body.email instanceof Array ? req.body.email : [];
+
+      const allUsers = await db.sequelize.query(
+        `select * from filter_username_email_ban(${
+          usernames.length ? "'" + JSON.stringify(usernames) + "'" : "null"
+        },
+      ${email.length ? "'" + JSON.stringify(email) + "'" : "null"},
+      ${baneado !== undefined ? baneado : null},
+      ${verificado !== undefined ? verificado : null},
+      ${contestada !== undefined ? contestada : null}
       )`,
-      {
-        plain: false,
+        {
+          plain: false,
 
-        raw: false,
+          raw: false,
 
-        type: db.sequelize.QueryTypes.SELECT,
-      }
-    );
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      );
 
-    const offset = (page - 1) * limit;
+      const offset = (page - 1) * limit;
 
-    res.json({
-      users: users.slice(offset, page * limit),
-      count: users.length,
-      limit,
-      page,
-    });
+      const users = allUsers.filter((e) => !e.administrador);
+
+      res.json({
+        users: users.slice(offset, page * limit),
+        count: users.length,
+        limit,
+        page,
+      });
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(400);
+    }
   });
 
-  router.post("/populatedb", verifyToken, async (req, res) => {
+  router.post("/populatedb", async (req, res) => {
     try {
       const numberOfUsers = req.body.users;
       for (let i = 0; i < numberOfUsers; i++) {
@@ -99,42 +114,37 @@ module.exports = function admin(app) {
     }
   });
 
-  router.post(
-    "/view/paginas_usuarios_verificados",
-    verifyToken,
-    async (req, res) => {
-      try {
-        const page = req.body.page ?? 1;
-
-        const users = await db.sequelize.query(
-          "select * from paginas_usuarios_verificados",
-          {
-            plain: false,
-
-            raw: false,
-
-            type: db.sequelize.QueryTypes.SELECT,
-          }
-        );
-
-        const offset = (page - 1) * limit;
-
-        res.json({
-          users: users.slice(offset, page * limit),
-          count: users.length,
-          limit,
-          page,
-        });
-      } catch (e) {
-        console.log(e);
-        res.sendStatus(400);
-      }
+  router.post("/view/paginas_usuarios_verificados", async (req, res) => {
+    try {
       const limit = req.body.limit ?? 10;
+      const page = req.body.page ?? 1;
+
+      const users = await db.sequelize.query(
+        "select * from paginas_usuarios_verificados",
+        {
+          plain: false,
+
+          raw: false,
+
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      const offset = (page - 1) * limit;
+
+      res.json({
+        users: users.slice(offset, page * limit),
+        count: users.length,
+        limit,
+        page,
+      });
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(400);
     }
-  );
+  });
   router.post(
     "/view/calificaciones_usuarios_sin_verificar",
-    verifyToken,
     async (req, res) => {
       try {
         const limit = req.body.limit ?? 10;
@@ -165,4 +175,154 @@ module.exports = function admin(app) {
       }
     }
   );
+  router.post("/view/baneados", async (req, res) => {
+    try {
+      const limit = req.body.limit ?? 10;
+      const page = req.body.page ?? 1;
+
+      const users = await db.sequelize.query(
+        "select * from valor_encuesta_verificado_usuarios_baneados",
+        {
+          plain: false,
+
+          raw: false,
+
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      const offset = (page - 1) * limit;
+
+      res.json({
+        users: users.slice(offset, page * limit),
+        count: users.length,
+        limit,
+        page,
+      });
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(400);
+    }
+  });
+
+  router.post("/promedio", async (req, res) => {
+    try {
+      const scores = req.body;
+      const users = await db.sequelize.query(
+        `SELECT calcular_promedio('${formatArray(scores)}'::float[]);`,
+        {
+          plain: false,
+
+          raw: false,
+
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      res.json(users[0].calcular_promedio);
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(400);
+    }
+  });
+
+  router.post("/ban", async (req, res) => {
+    try {
+      const ids = req.body;
+      const users = await db.sequelize.query(
+        `select * from public.banear_usuarios('${formatArrString(ids)}');`,
+        {
+          plain: false,
+
+          raw: false,
+
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      res.json(users);
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(400);
+    }
+  });
+
+  router.post("/movimientos_usuario", async (req, res) => {
+    try {
+      const limit = req.body.limit ?? 10;
+      const page = req.body.page ?? 1;
+
+      const usernames =
+        req.body.usernames instanceof Array ? req.body.usernames : [];
+
+      const movimiento =
+        req.body.movimiento instanceof Array ? req.body.movimiento : [];
+
+      const users = await db.sequelize.query(
+        `select * from filter_movimientos_usuario(${
+          usernames.length ? "'" + JSON.stringify(usernames) + "'" : "null"
+        },
+        ${movimiento.length ? "'" + JSON.stringify(movimiento) + "'" : "null"}
+        )`,
+        {
+          plain: false,
+
+          raw: false,
+
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      const offset = (page - 1) * limit;
+
+      res.json({
+        users: users.slice(offset, page * limit),
+        count: users.length,
+        limit,
+        page,
+      });
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(400);
+    }
+  });
+
+  router.post("/movimientos_pagina", async (req, res) => {
+    try {
+      const limit = req.body.limit ?? 10;
+      const page = req.body.page ?? 1;
+
+      const usernames =
+        req.body.usernames instanceof Array ? req.body.usernames : [];
+
+      const movimiento =
+        req.body.movimiento instanceof Array ? req.body.movimiento : [];
+
+      const users = await db.sequelize.query(
+        `select * from filter_movimientos_pagina(${
+          usernames.length ? "'" + JSON.stringify(usernames) + "'" : "null"
+        },
+          ${movimiento.length ? "'" + JSON.stringify(movimiento) + "'" : "null"}
+          )`,
+        {
+          plain: false,
+
+          raw: false,
+
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      );
+      const offset = (page - 1) * limit;
+
+      res.json({
+        users: users.slice(offset, page * limit),
+        count: users.length,
+        limit,
+        page,
+      });
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(400);
+    }
+  });
 };

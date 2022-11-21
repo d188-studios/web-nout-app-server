@@ -6,4 +6,6 @@ module.exports = {
   randomPageNumber: require("./randomPageNumber"),
   randomScore: require("./randomScore"),
   randomProfesion: require("./randomProfesion"),
+  formatArray: require("./formatArray"),
+  formatArrString: require("./formatArrString"),
 };
