@@ -15,7 +15,12 @@ module.exports = function verifyToken(req, res, next) {
 
     usersService
       .getUserByUuid(user.uuid)
-      .then((user) => {
+      .then(async (user) => {
+        if (user.baneado) return res.sendStatus(401);
+        const verifiedValue = await usersService.getVerifiedValue(user.uuid);
+        const encuestaValue = await usersService.getEncuestaValue(user.uuid);
+        user.survey = encuestaValue.contestada;
+        user.authorized = verifiedValue.verificado;
         req.user = user;
         next();
       })

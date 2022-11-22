@@ -17,6 +17,8 @@ module.exports = function auth(app) {
       const user = await authService.signUp(
         req.body.username.toLowerCase(),
         req.body.email,
+        req.body.nombre.toLowerCase(),
+        req.body.apellido.toLowerCase(),
         req.body.password
       );
 
@@ -51,7 +53,15 @@ module.exports = function auth(app) {
         req.body.password
       );
 
+      if (user.baneado) return res.sendStatus(401);
+
       const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET);
+
+      const verifiedValue = await usersService.getVerifiedValue(user.uuid);
+      const encuestaValue = await usersService.getEncuestaValue(user.uuid);
+
+      user.authorized = verifiedValue.verificado;
+      user.survey = encuestaValue.contestada;
       delete user.password;
       res.json({ token, user });
     } catch (e) {
@@ -72,7 +82,7 @@ module.exports = function auth(app) {
       (err, user) => {
         if (err) return res.sendStatus(403);
         usersService
-          .auhorizeUser(user.uuid)
+          .authorizeUser(user.uuid)
           .then(() => {
             res.sendStatus(200);
           })

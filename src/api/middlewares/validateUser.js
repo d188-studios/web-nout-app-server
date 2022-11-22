@@ -36,6 +36,14 @@ module.exports = [
 
       return true;
     }),
+  body("nombre")
+    .isLength({ min: 1 })
+    .withMessage("El nombre no puede estar vacio")
+    .isString(),
+  body("apellido")
+    .isLength({ min: 1 })
+    .withMessage("El apellido no puede estar vacio")
+    .isString(),
   body("password")
     .isLength({ min: 6 })
     .withMessage("La contraseña debe tener un mínimo de 6 caracteres."),

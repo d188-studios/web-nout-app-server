@@ -3,6 +3,8 @@ const status = require("./status");
 const auth = require("./auth");
 const pages = require("./pages");
 const content = require("./content");
+const survey = require("./encuesta");
+const admin = require("./admin");
 
 const router = express.Router();
 
@@ -13,4 +15,6 @@ module.exports = function routes(app) {
   auth(router);
   pages(router);
   content(router);
+  survey(router);
+  admin(router);
 };
