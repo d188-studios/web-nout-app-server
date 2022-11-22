@@ -58,6 +58,12 @@ class PagesService {
       },
     });
 
+    const movimientos = await this.movimientosModel.findOne({
+      where: {
+        id_pagina: id,
+      },
+    });
+
     if (!page) {
       throw new Error("Page not found");
     }
