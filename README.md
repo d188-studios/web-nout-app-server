@@ -1,3 +1,4 @@
 # web-nout-app-server
 This is the backend of Web Nout.
-Web Nout app is a Notes app similar to Notion
+Web Nout App is a notes app similar to Notion
+
